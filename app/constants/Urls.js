@@ -1,0 +1,3 @@
+'use strict';
+
+export const REPOS_URL = 'https://api.github.com/search/repositories?q=language:javascript&sort=stars&page=1';
