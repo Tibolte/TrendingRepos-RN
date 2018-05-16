@@ -10,7 +10,7 @@ import {
   FlatList
 } from 'react-native';
 import { connect } from 'react-redux'
-import { Text, ListItem, Left, Body, Icon, Right, Title, Thumbnail } from "native-base";
+import { Text, Container, Header, ListItem, Left, Body, Icon, Right, Title, Thumbnail } from "native-base";
 
 import {fetchRepos} from '../actions/repos'
 
@@ -31,20 +31,27 @@ class TrendingPage extends Component {
         </Body>
         <Right>
           <Text note>{item.stargazers_count} stars</Text>
-         </Right>
+        </Right>
       </ListItem>
     )
   }
 
   render() {
     return(
-      <View style={styles.container}>
+      <Container>
+        <Header>
+          <Left/>
+          <Body>
+            <Title>Trending JS repos</Title>
+          </Body>
+          <Right />
+        </Header>
         <FlatList
           data={this.props.reposList}
           renderItem={this.renderItem}
           keyExtractor={item => item.id}
         />
-      </View>
+      </Container>
     );
   }
 }
@@ -59,10 +66,3 @@ export default connect(
   mapStateToProps, 
   { fetchRepos }
 )(TrendingPage)
-
-const styles = StyleSheet.create({
-	container: {
-	  flex: 1,
-	  backgroundColor: '#F5FCFF',
-	},
-})
