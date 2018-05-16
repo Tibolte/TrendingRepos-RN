@@ -3,28 +3,47 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   StyleSheet,
-  Text,
-  View
+  View,
+  FlatList
 } from 'react-native';
 import { connect } from 'react-redux'
+import { Text, ListItem, Left, Body, Icon, Right, Title, Thumbnail } from "native-base";
 
-import {fetchRepos} from '../actions/repos';
+import {fetchRepos} from '../actions/repos'
 
 class TrendingPage extends Component {
 	componentDidMount() {
-    console.warn("component did mount");
-    this.props.fetchRepos();
-	}
+    this.props.fetchRepos(false, true, false, 1) // isRefreshing, loading, isLoadMore, page
+  }
+  
+  renderItem = ({ item }) => {
+    return (
+      <ListItem avatar>
+        <Left>
+           <Thumbnail source={{ uri: item.owner.avatar_url }} />
+        </Left>
+        <Body>
+          <Text>{item.name}</Text>
+          <Text note>{item.description}</Text>
+        </Body>
+        <Right>
+          <Text note>{item.stargazers_count} stars</Text>
+         </Right>
+      </ListItem>
+    )
+  }
 
   render() {
     return(
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Here should be our Github trending repos!
-        </Text>
+        <FlatList
+          data={this.props.reposList}
+          renderItem={this.renderItem}
+          keyExtractor={item => item.id}
+        />
       </View>
     );
   }
@@ -32,7 +51,7 @@ class TrendingPage extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    state
+    reposList: state.repos.reposList
   }
 }
 
@@ -44,13 +63,6 @@ export default connect(
 const styles = StyleSheet.create({
 	container: {
 	  flex: 1,
-	  justifyContent: 'center',
-	  alignItems: 'center',
 	  backgroundColor: '#F5FCFF',
 	},
-	welcome: {
-	  fontSize: 20,
-	  textAlign: 'center',
-	  margin: 10,
-	}
-});
+})

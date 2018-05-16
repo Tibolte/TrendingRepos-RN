@@ -14,6 +14,11 @@ export default function repos (state = initialState, action) {
   switch (action.type) {
     case types.FETCH_REPO_LIST:
       return state;
+    case types.RECEIVE_REPO_LIST:
+      return {
+        ... state,
+        reposList: action.reposList
+      };
     default:
       return state;
   }
