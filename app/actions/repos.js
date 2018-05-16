@@ -4,23 +4,32 @@ import * as types from '../constants/ActionTypes';
 import {request} from '../utils/HttpServices';
 import * as host from '../constants/Urls';
 
-export function fetchRepos(isRefreshing, loading, isLoadMore, page) {
+export function fetchRepos(currentPage, isLoadMore) {
   return dispatch => {
-    request(host.REPOS_URL)
-    .then((repoList) => {
-      console.log(repoList);
-      dispatch(receiveRepoList(repoList));
-    })
-    .catch((error) => {
-      dispatch(receiveRepoList([]));
-      console.error(error);
-    })
+    dispatch(fetchReposList(isLoadMore))
+      return request(host.buildUrl(currentPage))
+        .then((repoList) => {
+          console.log(repoList);
+          dispatch(receiveRepoList(repoList, currentPage + 1));
+        })
+        .catch((error) => {
+          dispatch(receiveRepoList([], currentPage));
+          console.error(error);
+        })
   }
 }
 
-function receiveRepoList(repoList) {
+function fetchReposList(isLoadMore) {
+  return {
+    type: types.FETCH_REPO_LIST,
+    isLoadMore: isLoadMore
+  }
+}
+
+function receiveRepoList(repoList, newPage) {
   return {
     type: types.RECEIVE_REPO_LIST,
-    reposList: repoList.items
+    reposList: repoList.items,
+    newPage: newPage
   }
 }

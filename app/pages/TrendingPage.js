@@ -7,7 +7,8 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   View,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 import { connect } from 'react-redux'
 import { Text, Container, Header, ListItem, Left, Body, Icon, Right, Title, Thumbnail } from "native-base";
@@ -16,7 +17,7 @@ import {fetchRepos} from '../actions/repos'
 
 class TrendingPage extends Component {
 	componentDidMount() {
-    this.props.fetchRepos(false, true, false, 1) // isRefreshing, loading, isLoadMore, page
+    this.props.fetchRepos(this.props.currentPage, isLoadMore = false)
   }
   
   renderItem = ({ item }) => {
@@ -36,6 +37,28 @@ class TrendingPage extends Component {
     )
   }
 
+  renderFooter = () => {
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE"
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
+
+  handleLoadMore = () => {
+    console.log("load more!!, newPage: ", this.props.currentPage);
+    if (this.props.loading == false) (
+      this.props.fetchRepos(this.props.currentPage, isLoadMore = true)
+    )
+  }
+
   render() {
     return(
       <Container>
@@ -49,7 +72,10 @@ class TrendingPage extends Component {
         <FlatList
           data={this.props.reposList}
           renderItem={this.renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
+          onEndReached={this.handleLoadMore}
+          onEndThreshold={0}
+          ListFooterComponent={this.renderFooter}
         />
       </Container>
     );
@@ -58,6 +84,9 @@ class TrendingPage extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    currentPage: state.repos.currentPage,
+    loading: state.repos.loading,
+    isLoadMore: state.repos.isLoadMore,
     reposList: state.repos.reposList
   }
 }
