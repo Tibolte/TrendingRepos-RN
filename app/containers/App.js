@@ -11,6 +11,7 @@ import {
   Text,
   View
 } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
 import TrendingPage from '../pages/TrendingPage';
 
 const instructions = Platform.select({
@@ -21,10 +22,18 @@ const instructions = Platform.select({
 });
 
 type Props = {};
+
+const RootStack = createStackNavigator({
+  Trending: {
+    screen: TrendingPage
+  },
+});
+
 export default class App extends Component<Props> {
+
   render() {
     return (
-      <TrendingPage/>
+      <RootStack/>
     )
   }
 }

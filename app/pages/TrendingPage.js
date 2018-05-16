@@ -16,6 +16,11 @@ import { Text, Container, Header, ListItem, Left, Body, Icon, Right, Title, Thum
 import {fetchRepos} from '../actions/repos'
 
 class TrendingPage extends Component {
+
+  static navigationOptions = {
+    header: null
+  }
+
 	componentDidMount() {
     this.props.fetchRepos(this.props.currentPage, isLoadMore = false)
   }
