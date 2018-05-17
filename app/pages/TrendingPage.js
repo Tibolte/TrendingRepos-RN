@@ -24,10 +24,14 @@ class TrendingPage extends Component {
 	componentDidMount() {
     this.props.fetchRepos(this.props.currentPage, isLoadMore = false)
   }
+
+  repoSelected = ({item}) => {
+    this.props.navigation.navigate('Details')
+  }
   
   renderItem = ({ item }) => {
     return (
-      <ListItem avatar>
+      <ListItem avatar onPress={() => {this.repoSelected(item)}}>
         <Left>
            <Thumbnail source={{ uri: item.owner.avatar_url }} />
         </Left>
